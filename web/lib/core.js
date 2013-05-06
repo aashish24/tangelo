@@ -72,6 +72,7 @@ var tangelo = {};
         var brand,
             i,
             initialize_control_panel,
+            initialize_file_dialog,
             initialize_navbar,
             item,
             items;
@@ -286,5 +287,48 @@ var tangelo = {};
         };
 
         initialize_control_panel(d3.select("[data-tangelo-type=control-panel]"));
+
+        // A nicer file dialog widget (based on
+        // http://duckranger.com/2012/06/pretty-file-input-field-in-bootstrap/).
+        initialize_file_dialog = function (s) {
+            var id,
+                style,
+                d;
+
+            s = d3.select(s);
+
+            // Grab the id and style attributes.
+            id = s.attr("id") || "";
+            style = s.property("style");
+
+            // Make the element invisible, give it a new id, and set it to
+            // "receive updates" from the visible text element.
+            s.style("display", "none")
+                .attr("id", id + "_tangelo")
+                .on("change", function () {
+                    $("#" + id).val($(this).val());
+                });
+
+            // Create a new element.
+            d = d3.select(document.createElement("div"))
+                    .classed("input-append", true);
+            d.append("input")
+                .attr("id", id)
+                .attr("type", "text")
+                .classed("input-large", true);
+            d.append("a")
+                .classed("btn", true)
+                .on("click", function () {
+                    $("input#" + id + "_tangelo").click();
+                });
+
+            s.each(function () {
+                this.parentNode.insertBefore(d.node(), this.nextSibling);
+            });
+        };
+
+        $.each(d3.selectAll("input[type=file]")[0], function (i, v) {
+            initialize_file_dialog(v);
+        });
     });
 }());
