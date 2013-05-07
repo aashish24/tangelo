@@ -17,6 +17,8 @@ enron.center = null;
 enron.degree = null;
 enron.host = null;
 
+enron.special = ["mike.grigsby@enron.com", "frank.hayden@enron.com", "kenny.soignet@enron.com", "berney.aucoin@enron.com"];
+
 function stringifyDate(d) {
     "use strict";
 
@@ -155,7 +157,7 @@ function updateGraph() {
                 .attr("r", 5)
                 .style("opacity", 1.0)
                 .style("fill", function (d) {
-                    return color(d.distance);
+                    return enron.special.indexOf(d.email) !== -1 ? "yellow" : color(d.distance);
                 });
 
             enter.call(force.drag)
