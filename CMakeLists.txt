@@ -53,6 +53,7 @@ set(JS_LINT_FILES
     ${CMAKE_SOURCE_DIR}/examples/ner/ner.js
     ${CMAKE_SOURCE_DIR}/examples/ssci/ssci.js
     ${CMAKE_SOURCE_DIR}/examples/flickr/flickr.js
+    ${CMAKE_SOURCE_DIR}/examples/kiva/kiva.js   
 )
 
 # These files should be uglified and concatenated.
@@ -94,6 +95,7 @@ set(SOURCES
     web/js/lib/jquery-ui-1.9.1.js
     web/js/lib/md5.js
     web/js/lib/vega-1.0.0.js
+    web/js/lib/vega.js
     web/css/bootstrap-readable.css
     web/css/jquery-ui-1.9.1.css
     web/css/tangelo.css

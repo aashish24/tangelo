@@ -1,0 +1,33 @@
+{
+  "width": 1920,
+  "height": 1000,
+  "viewport": [1920, 1000],
+  "data": [
+    {
+      "name": "countries"
+    }
+  ],
+  "marks": [
+    {
+      "type": "path",
+      "from": {
+        "data": "countries",
+        "transform": [{
+          "type": "geopath",
+          "value": "data",
+          "projection": "mercator",
+          "scale": 200,
+          "translate": [960, 500]
+        }]
+      },
+      "properties": {
+        "enter": {
+          "stroke": {"value": "#fff"},
+          "path": {"field": "path"}
+        },
+        "update": {"fill": {"value": "#ccc"}},
+        "hover": {"fill": {"value": "pink"}}
+      }
+    }
+  ]
+}

@@ -181,7 +181,7 @@ $(function () {
             date = dates[time.selectedIndex];
             updateDate();
             if (playing) {
-                timerId = setInterval(updater, 2000);
+                timerId = setInterval(updater, 2000);   
             }
         });
     }
