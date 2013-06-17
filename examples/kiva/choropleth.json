@@ -21,7 +21,7 @@
       "name": "test",
       "values": [ 
         {"x":0.0, "y":0.0},
-        {"x":10.0, "y":40.0}
+        {"x":10.0, "y":20.0}
       ] 
     }
   ],
@@ -49,11 +49,11 @@
     },
     {
       "type": "symbol",
-      "from": {"data": "test",
+      "from": {"data": "nodes",
          "transform": [{
           "type": "geo",
-          "lat": "data.y",
-          "lon": "data.x",
+          "lat": "data.1.0",
+          "lon": "data.1.1",
           "projection": "mercator",
           "scale": 200,
           "translate": [960, 500]
@@ -62,10 +62,11 @@
       "properties": {
         "enter": {
           "fillOpacity": {"value": 1.0},
-          "stroke": {"value": "steelblue"}
+          "stroke": {"value": "steelblue"},
+          "x": {"field" : "x"},
+          "y": {"field" : "y"}
         },
         "update": {
-         
           "fill": {"value": "steelblue"}
         },
         "hover": {
