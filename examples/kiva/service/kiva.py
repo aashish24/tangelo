@@ -10,7 +10,6 @@ def run(servername, dbname, type, datatype, querydata = None, collection = None,
     # Construct an empty response object.
     response = tangelo.empty_response();
 
-    cherrypy.log(type)
     # Establish a connection to the MongoDB server.
     try:
         conn = pymongo.Connection(servername)
@@ -18,10 +17,11 @@ def run(servername, dbname, type, datatype, querydata = None, collection = None,
         response['error'] = "error: %s" % (e.message)
         return bson.json_util.dumps(response)
 
-    cherrypy.log(type) 
     # Extract the requested database and collection.
     db = conn[dbname]
 
+    # (Chaudhary) Clean up this code. Currently the goal
+    # is to get the data in the right format for the visualization.
     if type == "find":
         cherrypy.log(type)
         if datatype == "loans":
