@@ -61,12 +61,11 @@
       },
       "properties": {
         "enter": {
-          "fillOpacity": {"value": 1.0},
-          "stroke": {"value": "steelblue"},
           "x": {"field" : "x"},
           "y": {"field" : "y"}
         },
         "update": {
+          "fillOpacity": {"value": 0.4},
           "fill": {"value": "steelblue"}
         },
         "hover": {
