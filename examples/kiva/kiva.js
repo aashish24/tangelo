@@ -203,13 +203,28 @@ $(function () {
         // TODO Filter by time
         d3.json("world-countries.json", function (error, countries) {
             d3.json("service/kiva/" + host + "/xdata/find/loans", function (error, loans) {
-                var i, d, data = {};
+                 d3.json("service/kiva/" + host + "/xdata/find/lenders", function (error, lenders) {
+                    var i, d, data = {};
+                    data.nodes = [];
 
-                // Generate data object
-                data.countries = countries.features;
-                data.nodes = loans;
-                //data.lenders = lenders;
-                init(data, host);
+                    // Generate data object
+                    data.countries = countries.features;
+
+                    var i = 0;
+                    for (i = 0; i < lenders.length; ++i) {
+                        lenders[i].type = "lenders";
+                        data.nodes.push(lenders[i]);
+                    }
+
+                    for (i = 0; i < loans.length; ++i) {
+                        loans[i].type = "loans";
+                        data.nodes.push(loans[i]);
+                    }
+                   
+                    // data.nodes = loans;
+                    // data.lenders = lenders;
+                    init(data, host);
+                });
             });
         });
     });

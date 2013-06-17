@@ -25,6 +25,11 @@
       ] 
     }
   ],
+  "scales": [
+    {
+    "name": "color", "type": "ordinal", "range": "category10"
+    }
+  ],
   "marks": [
     {
       "type": "path",
@@ -66,10 +71,10 @@
         },
         "update": {
           "fillOpacity": {"value": 0.4},
-          "fill": {"value": "steelblue"}
+          "fill": {"scale": "color", "field": "data.type"}
         },
         "hover": {
-          "fill": {"value": "#f00"}
+          "fill": {"value": "green"}
         }
       }
     },
