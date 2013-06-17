@@ -5,6 +5,24 @@
   "data": [
     {
       "name": "countries"
+    },
+    {
+      "name": "nodes",
+      "transform": [
+        {
+          "type": "force",  
+          "linkDistance": 0,
+          "charge": 0,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "name": "test",
+      "values": [ 
+        {"x":0.0, "y":0.0},
+        {"x":10.0, "y":40.0}
+      ] 
     }
   ],
   "marks": [
@@ -27,6 +45,32 @@
         },
         "update": {"fill": {"value": "#ccc"}},
         "hover": {"fill": {"value": "pink"}}
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "test",
+         "transform": [{
+          "type": "geo",
+          "lat": "data.y",
+          "lon": "data.x",
+          "projection": "mercator",
+          "scale": 200,
+          "translate": [960, 500]
+        }]
+      },
+      "properties": {
+        "enter": {
+          "fillOpacity": {"value": 1.0},
+          "stroke": {"value": "steelblue"}
+        },
+        "update": {
+         
+          "fill": {"value": "steelblue"}
+        },
+        "hover": {
+          "fill": {"value": "#f00"}
+        }
       }
     }
   ]

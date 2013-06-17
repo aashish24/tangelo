@@ -207,7 +207,7 @@ $(function () {
 
                 // Generate data object
                 data.countries = countries.features;
-                data.loans = loans;
+                data.nodes = loans;
                 //data.lenders = lenders;
                 init(data, host);
             });

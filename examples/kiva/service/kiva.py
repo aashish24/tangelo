@@ -28,7 +28,7 @@ def run(servername, dbname, type, datatype, querydata = None, collection = None,
             cherrypy.log(datatype)
             coll = db["kiva.loans"]
             # For now assume that we need to return only certain parameters
-            result = coll.find({ }, {"_id":0, "loans:id":1, "loans:location:geo:pairs":1, "loans:loan_amount":1})
+            result = coll.find({ }, {"_id":0, "loans:id":1, "loans:location:geo:pairs":1, "loans:loan_amount":1}).limit(10)
             response = [["%s" % d["loans:id"], [float(x) for x in d["loans:location:geo:pairs"].split()], float(d["loans:loan_amount"])] for d in result if d["loans:id"] != None]
     elif type == "aggregate":
         if datatype == "lenders":
