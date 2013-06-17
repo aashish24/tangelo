@@ -72,6 +72,37 @@
           "fill": {"value": "#f00"}
         }
       }
+    },
+    {
+      "type": "text",
+      "from": {
+        "data": "nodes",
+        "transform": [{
+          "type": "geo",
+          "lat": "data.1.0",
+          "lon": "data.1.1",
+          "projection": "mercator",
+          "scale": 200,
+          "translate": [960, 500]
+        }]
+      },
+      "properties": {
+        "enter": {
+          "x": {"field": "x", "offset": 6},
+          "y": {"field": "y"},
+          "text": {"field": "data.2"},
+          "baseline": {"value": "middle"},
+          "fillOpacity": {"value": 0.0}
+        },
+        "update": {
+          "fill": {"value": "black"},
+          "fillOpacity": {"value": 0.0}
+        },
+        "hover": {
+          "fill": {"value": "black"},
+          "fillOpacity": {"value": 1.0}
+        }
+      }
     }
   ]
 }
