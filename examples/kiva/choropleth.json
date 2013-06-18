@@ -48,11 +48,31 @@
         {"x":0.0, "y":0.0},
         {"x":10.0, "y":20.0}
       ] 
+    },
+    {
+      "name": "loansAmountRange"
+    },
+    {
+      "name": "lendersCountRange"
     }
   ],
   "scales": [
     {
-    "name": "color", "type": "ordinal", "range": "category20"
+    "name": "color", "type": "ordinal", "range": "category10"
+    },
+    {
+      "name": "loansAmountScale",
+      "type": "linear",
+      "range": [100, 500],
+      "zero": false,
+      "domain": {"data": "loansAmountRange", "field": "data"}
+    },
+    {
+      "name": "lendersCountScale",
+      "type": "linear",
+      "range": [100, 1000],
+      "zero": false,
+      "domain": {"data": "lendersCountRange", "field": "data"}
     }
   ],
   "marks": [
@@ -95,9 +115,9 @@
           "y": {"field" : "y"}
         },
         "update": {
-          "fillOpacity": {"value": 0.4},
+          "fillOpacity": {"value": 0.2},
           "fill": {"scale": "color", "field": "data.type"},
-          "size": {"field": "data.2"}
+          "size": {"scale": "loansAmountScale", "field": "data.2"}
         },
         "hover": {
           "fill": {"value": "green"}
@@ -122,9 +142,9 @@
           "y": {"field" : "y"}
         },
         "update": {
-          "fillOpacity": {"value": 0.4},
-          "fill": {"scale": "color", "field": "data.type"},
-          "size": {"field": "data.2"}
+          "fillOpacity": {"value": 0.3},
+           "fill": {"scale": "color", "field": "data.type"},
+          "size": {"scale": "lendersCountScale", "field": "data.2"}
         },
         "hover": {
           "fill": {"value": "green"}
