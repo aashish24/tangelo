@@ -213,6 +213,8 @@ $(function () {
 
                     // Initialize    
                     data.nodes = [];
+                    data.loans = loans;
+                    data.lenders = lenders;
 
                     // Generate data object
                     data.countries = countries.features;

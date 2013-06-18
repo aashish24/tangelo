@@ -18,6 +18,28 @@
       ]
     },
     {
+      "name": "loans",
+      "transform": [
+        {
+          "type": "force",  
+          "linkDistance": 0,
+          "charge": 0,
+          "iterations": 0
+        }
+      ]
+    },
+    {
+      "name": "lenders",
+      "transform": [
+        {
+          "type": "force",  
+          "linkDistance": 0,
+          "charge": 0,
+          "iterations": 0
+        }
+      ]
+    },
+    {
       "name": "legends"
     },
     {
@@ -30,7 +52,7 @@
   ],
   "scales": [
     {
-    "name": "color", "type": "ordinal", "range": "category10"
+    "name": "color", "type": "ordinal", "range": "category20"
     }
   ],
   "marks": [
@@ -57,7 +79,34 @@
     },
     {
       "type": "symbol",
-      "from": {"data": "nodes",
+      "from": {"data": "loans",
+         "transform": [{
+          "type": "geo",
+          "lat": "data.1.0",
+          "lon": "data.1.1",
+          "projection": "mercator",
+          "scale": 200,
+          "translate": [960, 500]
+        }]
+      },
+      "properties": {
+        "enter": {
+          "x": {"field" : "x"},
+          "y": {"field" : "y"}
+        },
+        "update": {
+          "fillOpacity": {"value": 0.4},
+          "fill": {"scale": "color", "field": "data.type"},
+          "size": {"field": "data.2"}
+        },
+        "hover": {
+          "fill": {"value": "green"}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "lenders",
          "transform": [{
           "type": "geo",
           "lat": "data.1.0",
