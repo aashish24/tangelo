@@ -71,7 +71,8 @@
         },
         "update": {
           "fillOpacity": {"value": 0.4},
-          "fill": {"scale": "color", "field": "data.type"}
+          "fill": {"scale": "color", "field": "data.type"},
+          "size": {"field": "data.2"}
         },
         "hover": {
           "fill": {"value": "green"}

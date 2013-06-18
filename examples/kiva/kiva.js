@@ -216,8 +216,9 @@ $(function () {
                         data.nodes.push(lenders[i]);
                     }
 
+                    // Loan sector is the fourth value in the array
                     for (i = 0; i < loans.length; ++i) {
-                        loans[i].type = "loans";
+                        loans[i].type = loans[i][3];
                         data.nodes.push(loans[i]);
                     }
                    
