@@ -204,7 +204,14 @@ $(function () {
         d3.json("world-countries.json", function (error, countries) {
             d3.json("service/kiva/" + host + "/xdata/find/loans", function (error, loans) {
                  d3.json("service/kiva/" + host + "/xdata/find/lenders", function (error, lenders) {
-                    var i, d, data = {};
+                    var i, d, data = {}, categories = {}, 
+                        noOfCategories, legends = [],
+                        legendWidth = 40, legendHeight = 20, 
+                        legendXOffset = 10, legendYOffset = 10,
+                        viewWidth = $("#vis").width(), 
+                        viewHeight = $("#vis").height();
+
+                    // Initialize    
                     data.nodes = [];
 
                     // Generate data object
@@ -212,7 +219,8 @@ $(function () {
 
                     var i = 0;
                     for (i = 0; i < lenders.length; ++i) {
-                        lenders[i].type = "lenders";
+                        lenders[i].type = "Lenders";
+                        categories[lenders[i].type] = 1;
                         data.nodes.push(lenders[i]);
                     }
 
@@ -220,7 +228,28 @@ $(function () {
                     for (i = 0; i < loans.length; ++i) {
                         loans[i].type = loans[i][3];
                         data.nodes.push(loans[i]);
+                        // console.log('loans[i].type in categories', categories, loans[i].type in categories);
+                        if (loans[i].type in categories === false) {
+                            categories[loans[i].type] = 1;
+                        }
                     }
+
+                    // Compute x and y for legendXOffset
+                    noOfCategories = Object.keys(categories).length;
+                    i = 0;
+                    for (var key in categories) {
+                        var legend = {};
+                        legend.x = legendXOffset;
+                        legend.width = legendWidth;
+                        legend.y = (i + 1) * legendYOffset + i * legendHeight;
+                        legend.y2 = legend.y + legendHeight;
+                        legend.text = key;
+                        legend.x_text = legend.x + legendWidth;
+                        legend.y_text = legend.y + legendHeight * 0.5;
+                        legends.push(legend);
+                        ++i;
+                    }
+                    data.legends = legends;
                    
                     // data.nodes = loans;
                     // data.lenders = lenders;

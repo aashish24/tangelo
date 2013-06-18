@@ -18,6 +18,9 @@
       ]
     },
     {
+      "name": "legends"
+    },
+    {
       "name": "test",
       "values": [ 
         {"x":0.0, "y":0.0},
@@ -107,6 +110,39 @@
         "hover": {
           "fill": {"value": "black"},
           "fillOpacity": {"value": 1.0}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {
+        "data": "legends"
+      },
+      "properties": {
+        "enter": {
+          "x": {"field": "data.x"},
+          "width": {"field": "data.width"},
+          "y": {"field": "data.y"},
+          "y2": {"field": "data.y2"}
+        },
+        "update": {
+          "fill": {"scale": "color", "field": "data.text"},
+          "fillOpacity": {"value": 0.5}
+        } 
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "legends"},
+      "properties": {
+        "enter": {
+          "x": {"field": "data.x_text", "offset": 5},
+          "y": {"field": "data.y_text"},
+          "fill": {"value": "#000"},
+          "text": {"field": "data.text"},
+          "font": {"value": "Helvetica Neue"},
+          "fontSize": {"value": 10},
+          "baseline" : {"value": "middle"}
         }
       }
     }
