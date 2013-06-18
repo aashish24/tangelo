@@ -208,6 +208,8 @@ $(function () {
                         noOfCategories, legends = [],
                         legendWidth = 40, legendHeight = 20, 
                         legendXOffset = 10, legendYOffset = 10,
+                        loansAmountMin = 0, loansAmountMax = 0,
+                        lenderCountMin = 0, lenderCountMax = 0,
                         viewWidth = $("#vis").width(), 
                         viewHeight = $("#vis").height();
 
@@ -220,6 +222,10 @@ $(function () {
                     data.countries = countries.features;
 
                     var i = 0;
+                    if (lenders.length > 0) {
+                        // [min, max]
+                        data.lendersCountRange = [lenders[lenders.length - 1][2], lenders[0][2]];
+                    }
                     for (i = 0; i < lenders.length; ++i) {
                         lenders[i].type = "Lenders";
                         categories[lenders[i].type] = 1;
@@ -227,6 +233,10 @@ $(function () {
                     }
 
                     // Loan sector is the fourth value in the array
+                    if (loans.length > 0) {
+                        // [min, max]
+                        data.loansAmountRange = [loans[loans.length - 1][2], loans[0][2]];
+                    }
                     for (i = 0; i < loans.length; ++i) {
                         loans[i].type = loans[i][3];
                         data.nodes.push(loans[i]);
