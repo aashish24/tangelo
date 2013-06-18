@@ -169,15 +169,13 @@
           "x": {"field": "x", "offset": 6},
           "y": {"field": "y"},
           "text": {"field": "data.2"},
-          "baseline": {"value": "middle"},
-          "fillOpacity": {"value": 0.0}
+          "baseline": {"value": "middle"}
         },
         "update": {
-          "fill": {"value": "black"},
-          "fillOpacity": {"value": 0.0}
+          "fillOpacity": {"value": 0.0},
+           "fill": {"value": "black"}
         },
         "hover": {
-          "fill": {"value": "black"},
           "fillOpacity": {"value": 1.0}
         }
       }

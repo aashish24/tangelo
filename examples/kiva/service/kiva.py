@@ -32,7 +32,7 @@ def run(servername, dbname, type, datatype, querydata = None, collection = None,
             result = coll.find({ }, { "_id": 0, "loans:id": 1, 
                 "loans:location:geo:pairs": 1, 
                 "loans:loan_amount": 1,
-                "loans:sector": 1 }).limit(10000)
+                "loans:sector": 1 }).limit(1000)
             result.sort("loans:loan_amount", -1)
 
             response = [["%s" % d["loans:id"], [float(x) 
@@ -46,7 +46,7 @@ def run(servername, dbname, type, datatype, querydata = None, collection = None,
             result = coll.find({ "loans:location:geo:pairs": { "$exists": "true" } }, {
                 "_id": 0, "lenders:loan_count": 1, 
                 "lenders:lender_id":1, 
-                "loans:location:geo:pairs":1}).limit(10000)
+                "loans:location:geo:pairs":1}).limit(1000)
             result.sort("lenders:loan_count", -1)
 
             response = [["%s" % d["lenders:lender_id"], 
