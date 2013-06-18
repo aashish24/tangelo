@@ -29,35 +29,51 @@ def run(servername, dbname, type, datatype, querydata = None, collection = None,
             cherrypy.log("Processing find query for datatype " + datatype)
             coll = db["kiva.loans"]
             # For now assume that we need to return only certain parameters
-            result = coll.find({ }, { "_id": 0, "loans:id": 1, 
-                "loans:location:geo:pairs": 1, 
+            result = coll.find({ }, { "_id": 0, "loans:id": 1,
+                "loans:location:geo:pairs": 1,
                 "loans:loan_amount": 1,
                 "loans:sector": 1,
                 "loans:id": 1 }).limit(1000)
             result.sort("loans:loan_amount", -1)
 
-            response = [["%s" % d["loans:id"], [float(x) 
-                for x in d["loans:location:geo:pairs"].split()], 
-                float(d["loans:loan_amount"]), 
+            response = [["%s" % d["loans:id"], [float(x)
+                for x in d["loans:location:geo:pairs"].split()],
+                float(d["loans:loan_amount"]),
                 str(d["loans:sector"]),
-                str(d["loans"id])] for d in result if d["loans:id"] != None]
+                str(d["loans:id"])] for d in result if d["loans:id"] != None]
 
         if datatype == "lenders":
             cherrypy.log("Processing find query for datatype " + datatype)
             coll = db["kiva.lenders"]
             result = coll.find({ "loans:location:geo:pairs": { "$exists": "true" } }, {
-                "_id": 0, "lenders:loan_count": 1, 
-                "lenders:lender_id":1, 
+                "_id": 0, "lenders:loan_count": 1,
+                "lenders:lender_id":1,
                 "loans:location:geo:pairs":1}).limit(1000)
             result.sort("lenders:loan_count", -1)
 
-            response = [["%s" % d["lenders:lender_id"], 
-                [float(x) for x in d["loans:location:geo:pairs"].split()], 
+            response = [["%s" % d["lenders:lender_id"],
+                [float(x) for x in d["loans:location:geo:pairs"].split()],
                 float(d["lenders:loan_count"])] for d in result if d["lenders:lender_id"] != None]
+
+        if datatype == "lender-loan-links":
+            cherrypy.log("Processing find query for datatype " + datatype)
+            coll = db["kiva.lenders"]
+            lenders = coll.find({ "loans:location:geo:pairs": { "$exists": "true" } }, {
+                "_id": 0, "lenders:lender_id":1 }).limit(1000)
+            lenders = ["%s" % d["lenders:lender_id"] for d in lenders if d["lenders:lender_id"] != None]
+            coll = db["kiva.lender.loan.links"]
+            cherrypy.log('lenders', str(list(lenders)))
+            result = coll.find({ "id" : { "$in" : list(lenders) } }, {
+                "_id": 0, "id": 1,
+                "loans:id":1,
+                "loans:borrower_count":1}).limit(1000)
+
+            response = [["%s" % d["id"], "%s" % d["loans:id"], float(d["loans:borrower_count"])]
+                for d in result if d["id"] != None]
 
     elif type == "aggregate":
         if datatype == "lenders":
-            coll = db["kiva.lenders"]   
+            coll = db["kiva.lenders"]
             conditions = [{"member_since": {"$ne": None}}];
             if datemin != None and datemax != None:
                 date_min = datetime.datetime.strptime(datemin, "%Y-%m-%d")
