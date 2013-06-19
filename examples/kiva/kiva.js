@@ -11,6 +11,8 @@ $(function () {
     d3.select("body").style("height", $(window).height() - 60);
 
     function updateData(data, host) {
+        "use strict";
+
         var view,
             donorMap = {},
             date,
@@ -51,6 +53,8 @@ $(function () {
     }
 
     function update(count, host) {
+        "use strict";
+
         // Load contries and relevant dataset
         d3.json("world-countries.json", function (error, countries) {
             d3.json("service/kiva/" + host + "/xdata/find/loans?count="+count, function (error, loans) {
