@@ -10,6 +10,7 @@ import tangelo
 def run(servername, dbname, type, datatype, querydata = None,
     collection = None, by = None, datemin = None, datemax = None, count = None):
 
+    # Check if we have valid count value if not default to 100
     if count is None:
         count = 100
     else:
@@ -40,13 +41,26 @@ def run(servername, dbname, type, datatype, querydata = None,
         # Perform find operation on loans
         if datatype == "loans":
             cherrypy.log("Processing find query for datatype " + datatype)
+
+            # Check if we have valid datemin and max. Currently only
+            # the loas has time entries
+            if (datemin is not None and datemax is not None):
+                conditions = { "loans:posted_date" : { "$gte" : datemin,
+                              "$lte" : datemax } }
+            else:
+                conditions = {}
+
+            cherrypy.log("conditions " + str(conditions))
+
             coll = db["kiva.loans"]
             # For now assume that we need to return only certain parameters
-            result = coll.find({ }, { "_id": 0, "loans:id": 1,
+            result = coll.find(conditions, { "_id": 0, "loans:id": 1,
                 "loans:location:geo:pairs": 1,
                 "loans:loan_amount": 1,
                 "loans:sector": 1,
                 "loans:id": 1 }).limit(count)
+
+            # Sort result by loan amount
             result.sort("loans:loan_amount", -1)
 
             response = [["%s" % d["loans:id"], [float(x)
@@ -63,6 +77,8 @@ def run(servername, dbname, type, datatype, querydata = None,
                 "_id": 0, "lenders:loan_count": 1,
                 "lenders:lender_id":1,
                 "loans:location:geo:pairs":1}).limit(count)
+
+            # Sort result by loan count
             result.sort("lenders:loan_count", -1)
 
             response = [["%s" % d["lenders:lender_id"],
@@ -71,13 +87,15 @@ def run(servername, dbname, type, datatype, querydata = None,
 
         # Pefrom find operation on lender loan links data
         if datatype == "lender-loan-links":
+            # TODO For now find the lenders here but this information could come from
+            # the front-end as well
             cherrypy.log("Processing find query for datatype " + datatype)
             coll = db["kiva.lenders"]
             lenders = coll.find({ "loans:location:geo:pairs": { "$exists": "true" } }, {
                 "_id": 0, "lenders:lender_id":1 }).limit(count)
             lenders = ["%s" % d["lenders:lender_id"] for d in lenders if d["lenders:lender_id"] != None]
+
             coll = db["kiva.lender.loan.links"]
-            cherrypy.log('lenders', str(list(lenders)))
             result = coll.find({ "id" : { "$in" : list(lenders) } }, {
                 "_id": 0, "id": 1,
                 "loans:id":1,
@@ -105,7 +123,6 @@ def run(servername, dbname, type, datatype, querydata = None,
                 group = {"year": {"$year": "$date"}, "month": {"$month": "$member_since"}}
             else:
                 group = "$country_code"
-            print 'pipeline', pipeline
             pipeline.append({"$group": {"_id": group, "amount": {"$sum": "$loan_count"}}})
             result = coll.aggregate(pipeline)
             if by == "month":

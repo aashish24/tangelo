@@ -4,19 +4,32 @@
     <head>
         <link href="/css/tangelo.css" rel=stylesheet type="text/css">
         <title>CharityNet</title/>
-        <script src="/js/loader/load-tangelo.min.js"></script>
-        <script src="/js/lib/vega.js"></script>
-        <script src="kiva.js"></script>
-        <style>
-    html {
-        height: 100%;
-    }
 
-    body {
-        padding-top: 60px;
-        height: 100%;
-        background-color: #ddd;
-    }
+        <!-- Tangelo -->
+        <script src="/js/loader/load-tangelo.js"></script>
+
+        <!-- JQuery UI -->
+        <script src="/js/lib/jquery-ui-1.9.1.js"></script>
+
+        <!-- Vega -->
+        <script src="/js/lib/vega.js"></script>
+
+        <!-- kiva -->
+        <script src="kiva.js"></script>
+
+        <!-- Styling for UI elements -->
+        <link href="/css/jquery-ui-1.9.1.css" rel=stylesheet type=text/css>
+
+        <style>
+            html {
+                height: 100%;
+            }
+
+            body {
+                padding-top: 60px;
+                height: 100%;
+                background-color: #ddd;
+            }
         </style>
     </head>
     <body>
@@ -35,6 +48,12 @@
             <div class="span5">
                 <h4>Record count limit</h4>
                 <input id="count" type="text" value="100"></input>
+            </div>
+            <div class=span3>
+                <h4>Time filter <i id=time-filter-help class=icon-question-sign></i></h4>
+                <div id="time-slider"></div>
+                <div class=code id="low"></div>
+                <div class=code id="high"></div>
             </div>
         </div>
     </div>
