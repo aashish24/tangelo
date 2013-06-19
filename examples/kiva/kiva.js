@@ -10,7 +10,7 @@ $(function () {
     // Make the body element the correct size for no scrolling
     d3.select("body").style("height", $(window).height() - 60);
 
-    function init(data, host) {
+    function updateData(data, host) {
         var view,
             donorMap = {},
             date,
@@ -25,150 +25,8 @@ $(function () {
             d,
             normalize = false;
 
-        // function updateData() {
-        //     // Load aggregated amount into donors array
-        //     for (i = 0; i < data.donors.length; i += 1) {
-        //         d = data.donors[i];
-        //         if (normalize) {
-        //             d[1] = d[2] === 0 ? 0 : (d[3] / d[2]);
-        //         } else {
-        //             d[1] = d[3];
-        //         }
-        //     }
-
-        //     // Update the visualization
-        //     view.data(data).update();
-        // }
-
-        // function updateDate() {
-        //     var minDate,
-        //         maxDate,
-        //         url,
-        //         next,
-        //         d;
-
-        //     // Construct query url with date range
-        //     minDate = date.year + "-" + numFormat(date.month) + "-01";
-        //     next = {year: date.year, month: date.month + 1};
-        //     if (next.month > 12) {
-        //         next.year += 1;
-        //         next.month = 1;
-        //     }
-        //     maxDate = next.year + "-" + numFormat(next.month) + "-01";
-        //     url = "service/charitynet/" + host + "/xdata/transactions?datemin=" + minDate + "&datemax=" + maxDate;
-        //     if (charity !== null) {
-        //         url += "&charity=" + charity[0];
-        //     }
-
-        //     // Update the donor data
-        //     d3.json(url, function (error, donors) {
-        //         var i;
-
-        //         // Zero out data
-        //         for (i = 0; i < data.donors.length; i += 1) {
-        //             data.donors[i][3] = 0;
-        //         }
-
-        //         // Load aggregated amount into donors array
-        //         for (i = 0; i < donors.length; i += 1) {
-        //             d = donorMap[donors[i][0]];
-        //             if (d !== undefined) {
-        //                 d[3] = donors[i][1];
-        //             }
-        //         }
-
-        //         updateData();
-        //     });
-        // }
-
-        // function updater() {
-        //     var time = d3.select("#time").node();
-        //     time.selectedIndex = (time.selectedIndex + 1) % dates.length;
-        //     date = dates[time.selectedIndex];
-        //     updateDate();
-        // }
-
-        // date = {year: 2011, month: 1};
-        // dates = [];
-        // while (date.year * 100 + date.month <= 201301) {
-        //     dates.push({year: date.year, month: date.month});
-        //     date.month += 1;
-        //     if (date.month > 12) {
-        //         date.year += 1;
-        //         date.month = 1;
-        //     }
-        // }
-
-        // playing = true;
-
-        // d3.select("#time").selectAll("option")
-        //     .data(dates)
-        //     .enter().append("option")
-        //     .attr("value", function (d) { return d; })
-        //     .text(function (d) { return d.year + "-" + numFormat(d.month); });
-
-        // d3.select("#time").on("change", function () {
-        //     playing = false;
-        //     d3.select("#play i").classed("icon-play", true).classed("icon-pause", false);
-        //     clearTimeout(timerId);
-        //     var time = d3.select("#time").node();
-        //     date = dates[time.selectedIndex];
-        //     updateDate();
-        // });
-
-        // d3.select("#play").on("click", function () {
-        //     playing = !playing;
-        //     d3.select("#play i").classed("icon-pause", playing).classed("icon-play", !playing);
-        //     if (playing) {
-        //         timerId = setInterval(updater, 5000);
-        //     } else {
-        //         clearTimeout(timerId);
-        //     }
-        // });
-
-        // d3.select("#popnorm").on("click", function () {
-        //     normalize = this.checked;
-        //     view._model._defs.marks.scales[0].domain = [0, normalize ? (charityMaxMonth / 5000000) : charityMaxMonth];
-        //     updateData();
-        // });
-
-        // d3.select("#charity").selectAll("option")
-        //     .data(data.charities)
-        //     .enter().append("option")
-        //     .attr("value", function (d) { return d[0]; })
-        //     .text(function (d) { return d[1]; });
-
-        // d3.select("#charity").on("change", function () {
-        //     var url;
-        //     charity = data.charities[this.selectedIndex];
-        //     url = "service/charitynet/" + host + "/xdata/transactions?by=month&charity=" + charity[0];
-        //     d3.json(url, function (error, months) {
-        //         console.log(months);
-        //         charityMaxMonth = d3.max(months, function (d) { return d[1]; }) / 100;
-        //         console.log(charityMaxMonth);
-        //         view._model._defs.marks.scales[0].domain = [0, normalize ? (charityMaxMonth / 5000000) : charityMaxMonth];
-        //         updateDate();
-        //     });
-        // });
-
-        // Init donors array and create map for looking up donors by county
-        // data.donors = [];
-        // for (i = 0; i < data.counties.length; i += 1) {
-        //     d = [data.counties[i].id, 0, 0, 0];
-        //     data.donors.push(d);
-        //     donorMap[d[0]] = d;
-        // }
-
-        // // Attach population for each county
-        // for (i = 0; i < data.population.length; i += 1) {
-        //     d = data.population[i];
-        //     if (donorMap[d[0]] !== undefined) {
-        //         donorMap[d[0]][2] = d[1];
-        //     }
-        // }
-
         // Generate the visualization
-        console.log('data ', data);
+        // console.log('data ', data);
 
         vg.parse.spec("choropleth.json", function (chart) {
             chart({el: "#vis", data: data}).update();
@@ -192,18 +50,11 @@ $(function () {
         });
     }
 
-    // Load in the default configuration values, county, state, and initial
-    // contribution data
-    tangelo.defaults("defaults.json", function (defaults) {
-        var host = "localhost";
-
-        //host = defaults ? defaults["host"] : "localhost";
-
+    function update(count, host) {
         // Load contries and relevant dataset
-        // TODO Filter by time
         d3.json("world-countries.json", function (error, countries) {
-            d3.json("service/kiva/" + host + "/xdata/find/loans", function (error, loans) {
-                d3.json("service/kiva/" + host + "/xdata/find/lenders", function (error, lenders) {
+            d3.json("service/kiva/" + host + "/xdata/find/loans?count="+count, function (error, loans) {
+                d3.json("service/kiva/" + host + "/xdata/find/lenders?count="+count, function (error, lenders) {
                     d3.json("service/kiva/" + host + "/xdata/find/lender-loan-links", function (error, llLinks) {
                         // TODO (Choudhary) Make this code modular
                         var i, d, data = {}, categories = {},
@@ -288,14 +139,23 @@ $(function () {
                             }
                         }
 
-                        console.log("edges", data.edges);
-
-                        // data.nodes = loans;
-                        // data.lenders = lenders;
-                        init(data, host);
+                        updateData(data, host);
                     });
                 });
             });
         });
+    }
+
+    // Load in the default configuration values, county, state, and initial
+    // contribution data
+    tangelo.defaults("defaults.json", function (defaults) {
+        var host = "localhost";
+        update(d3.select("#count").node().value, "localhost")
+        //host = defaults ? defaults["host"] : "localhost";
+    });
+
+    d3.select("#count").on("change", function () {
+        console.log("Updating");
+        update(d3.select("#count").node().value, "localhost");
     });
 });

@@ -8,7 +8,16 @@ import tangelo
 
 
 def run(servername, dbname, type, datatype, querydata = None,
-    collection = None, by = None, datemin = None, datemax = None, count = 1000):
+    collection = None, by = None, datemin = None, datemax = None, count = None):
+
+    if count is None:
+        count = 100
+    else:
+        try:
+            count = int(count)
+        except exceptions.ValueError:
+            pass
+
     # Construct an empty response object.
     response = tangelo.empty_response();
 
