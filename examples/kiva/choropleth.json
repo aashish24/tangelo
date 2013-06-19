@@ -157,7 +157,7 @@
           "y": {"field" : "y"}
         },
         "update": {
-          "fillOpacity": {"value": 0.2},
+          "fillOpacity": {"value": 0.3},
           "fill": {"scale": "color", "field": "data.type"},
           "size": {"scale": "loansAmountScale", "field": "data.2"}
         },
