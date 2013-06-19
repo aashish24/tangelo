@@ -23,8 +23,10 @@ def run(servername, dbname, type, datatype, querydata = None, collection = None,
     # (Chaudhary) Clean up this code. Currently the goal
     # is to get the data in the right format for the visualization.
     if type == "find":
-        cherrypy.log(type)
+        # Current we support three types of datatypes: loans,
+        # lenders, and lender-loan-links
 
+        # Perform find operation on loans
         if datatype == "loans":
             cherrypy.log("Processing find query for datatype " + datatype)
             coll = db["kiva.loans"]
@@ -42,6 +44,7 @@ def run(servername, dbname, type, datatype, querydata = None, collection = None,
                 str(d["loans:sector"]),
                 str(d["loans:id"])] for d in result if d["loans:id"] != None]
 
+        # Perform find operation on lenders
         if datatype == "lenders":
             cherrypy.log("Processing find query for datatype " + datatype)
             coll = db["kiva.lenders"]
@@ -55,6 +58,7 @@ def run(servername, dbname, type, datatype, querydata = None, collection = None,
                 [float(x) for x in d["loans:location:geo:pairs"].split()],
                 float(d["lenders:loan_count"])] for d in result if d["lenders:lender_id"] != None]
 
+        # Pefrom find operation on lender loan links data
         if datatype == "lender-loan-links":
             cherrypy.log("Processing find query for datatype " + datatype)
             coll = db["kiva.lenders"]
@@ -66,11 +70,12 @@ def run(servername, dbname, type, datatype, querydata = None, collection = None,
             result = coll.find({ "id" : { "$in" : list(lenders) } }, {
                 "_id": 0, "id": 1,
                 "loans:id":1,
-                "loans:borrower_count":1}).limit(1000)
+                "loans:borrower_count":1}).limit(10000)
 
             response = [["%s" % d["id"], "%s" % d["loans:id"], float(d["loans:borrower_count"])]
                 for d in result if d["id"] != None]
 
+    # Perform aggregation type queries
     elif type == "aggregate":
         if datatype == "lenders":
             coll = db["kiva.lenders"]

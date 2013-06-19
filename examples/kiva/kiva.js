@@ -218,7 +218,7 @@ $(function () {
 
                         // Initialize
                         data.nodes = [];
-                        data.links = [];
+                        data.edges = [];
                         data.loans = loans;
                         data.lenders = lenders;
 
@@ -278,18 +278,17 @@ $(function () {
                         // Finally construct links
                         // TODO (Choudhary) This is really crude but we will make it better
                         // later.
-                        console.log("links", llLinks);
-                        console.log("lendersIndexMap", lendersIndexMap);
-
                         for (i = 0; i < llLinks.length; ++i) {
                             var link = {};
                             if (llLinks[i][0] in lendersIndexMap &&
                                 llLinks[i][1] in loansIndexMap) {
                                 link.source = lendersIndexMap[llLinks[i][0]];
-                                link.target = lendersIndexMap[llLinks[i][1]];
-                                data.links.push(link);
+                                link.target = loansIndexMap[llLinks[i][1]];
+                                data.edges.push(link);
                             }
                         }
+
+                        console.log("edges", data.edges);
 
                         // data.nodes = loans;
                         // data.lenders = lenders;

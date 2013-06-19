@@ -7,13 +7,17 @@
       "name": "countries"
     },
     {
+      "name": "edges",
+      "transform": [
+        {"type": "copy", "from": "data", "fields": ["source", "target"]}
+      ]
+    },
+    {
       "name": "nodes",
       "transform": [
         {
-          "type": "force",  
-          "linkDistance": 0,
-          "charge": 0,
-          "iterations": 0
+          "type": "force",
+          "links": "edges"
         }
       ]
     },
@@ -21,10 +25,7 @@
       "name": "loans",
       "transform": [
         {
-          "type": "force",  
-          "linkDistance": 0,
-          "charge": 0,
-          "iterations": 0
+          "type": "force"
         }
       ]
     },
@@ -32,10 +33,7 @@
       "name": "lenders",
       "transform": [
         {
-          "type": "force",  
-          "linkDistance": 0,
-          "charge": 0,
-          "iterations": 0
+          "type": "force"
         }
       ]
     },
@@ -44,10 +42,10 @@
     },
     {
       "name": "test",
-      "values": [ 
+      "values": [
         {"x":0.0, "y":0.0},
         {"x":10.0, "y":20.0}
-      ] 
+      ]
     },
     {
       "name": "loansAmountRange"
@@ -95,6 +93,50 @@
         },
         "update": {"fill": {"value": "#ccc"}},
         "hover": {"fill": {"value": "pink"}}
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "nodes",
+         "transform": [{
+          "type": "geo",
+          "lat": "data.1.0",
+          "lon": "data.1.1",
+          "projection": "mercator",
+          "scale": 200,
+          "translate": [960, 500]
+        }]
+      },
+      "properties": {
+        "enter": {
+          "x": {"field" : "x"},
+          "y": {"field" : "y"}
+        },
+        "update": {
+          "fillOpacity": {"value": 0.0},
+          "fill": {"scale": "color", "field": "data.type"},
+          "size": {"scale": "lendersCountScale", "field": "data.2"}
+        },
+        "hover": {
+          "fill": {"value": "green"}
+        }
+      }
+    },
+    {
+      "type": "path",
+      "from": {
+        "data": "edges",
+        "transform": [
+          {"type": "link", "shape": "line"}
+        ]
+      },
+      "properties": {
+        "update": {
+          "path": {"field": "path"},
+          "stroke": {"value": "green"},
+          "strokeOpacity": {"value": 0.2},
+          "strokeWidth": {"value": 2}
+        }
       }
     },
     {
@@ -173,7 +215,7 @@
         },
         "update": {
           "fillOpacity": {"value": 0.0},
-           "fill": {"value": "black"}
+          "fill": {"value": "black"}
         },
         "hover": {
           "fillOpacity": {"value": 1.0}
@@ -195,7 +237,7 @@
         "update": {
           "fill": {"scale": "color", "field": "data.text"},
           "fillOpacity": {"value": 0.5}
-        } 
+        }
       }
     },
     {
