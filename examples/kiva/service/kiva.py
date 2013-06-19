@@ -6,7 +6,9 @@ import cherrypy
 
 import tangelo
 
-def run(servername, dbname, type, datatype, querydata = None, collection = None, by = None, datemin = None, datemax = None):
+
+def run(servername, dbname, type, datatype, querydata = None,
+    collection = None, by = None, datemin = None, datemax = None, count = 1000):
     # Construct an empty response object.
     response = tangelo.empty_response();
 
@@ -35,7 +37,7 @@ def run(servername, dbname, type, datatype, querydata = None, collection = None,
                 "loans:location:geo:pairs": 1,
                 "loans:loan_amount": 1,
                 "loans:sector": 1,
-                "loans:id": 1 }).limit(1000)
+                "loans:id": 1 }).limit(count)
             result.sort("loans:loan_amount", -1)
 
             response = [["%s" % d["loans:id"], [float(x)
@@ -51,7 +53,7 @@ def run(servername, dbname, type, datatype, querydata = None, collection = None,
             result = coll.find({ "loans:location:geo:pairs": { "$exists": "true" } }, {
                 "_id": 0, "lenders:loan_count": 1,
                 "lenders:lender_id":1,
-                "loans:location:geo:pairs":1}).limit(1000)
+                "loans:location:geo:pairs":1}).limit(count)
             result.sort("lenders:loan_count", -1)
 
             response = [["%s" % d["lenders:lender_id"],
@@ -63,14 +65,14 @@ def run(servername, dbname, type, datatype, querydata = None, collection = None,
             cherrypy.log("Processing find query for datatype " + datatype)
             coll = db["kiva.lenders"]
             lenders = coll.find({ "loans:location:geo:pairs": { "$exists": "true" } }, {
-                "_id": 0, "lenders:lender_id":1 }).limit(1000)
+                "_id": 0, "lenders:lender_id":1 }).limit(count)
             lenders = ["%s" % d["lenders:lender_id"] for d in lenders if d["lenders:lender_id"] != None]
             coll = db["kiva.lender.loan.links"]
             cherrypy.log('lenders', str(list(lenders)))
             result = coll.find({ "id" : { "$in" : list(lenders) } }, {
                 "_id": 0, "id": 1,
                 "loans:id":1,
-                "loans:borrower_count":1}).limit(10000)
+                "loans:borrower_count":1})
 
             response = [["%s" % d["id"], "%s" % d["loans:id"], float(d["loans:borrower_count"])]
                 for d in result if d["id"] != None]
