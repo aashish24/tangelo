@@ -82,7 +82,7 @@
           "type": "geopath",
           "value": "data",
           "projection": "mercator",
-          "scale": 200,
+          "scale": 400,
           "translate": [960, 500]
         }]
       },
@@ -103,7 +103,7 @@
           "lat": "data.1.0",
           "lon": "data.1.1",
           "projection": "mercator",
-          "scale": 200,
+          "scale": 400,
           "translate": [960, 500]
         }]
       },
@@ -130,7 +130,7 @@
           "lat": "data.1.0",
           "lon": "data.1.1",
           "projection": "mercator",
-          "scale": 200,
+          "scale": 400,
           "translate": [960, 500]
         }]
       },
@@ -157,7 +157,7 @@
           "lat": "data.1.0",
           "lon": "data.1.1",
           "projection": "mercator",
-          "scale": 200,
+          "scale": 400,
           "translate": [960, 500]
         }]
       },
@@ -202,7 +202,7 @@
           "lat": "data.1.0",
           "lon": "data.1.1",
           "projection": "mercator",
-          "scale": 200,
+          "scale": 400,
           "translate": [960, 500]
         }]
       },

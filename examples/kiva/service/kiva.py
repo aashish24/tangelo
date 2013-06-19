@@ -53,7 +53,7 @@ def run(servername, dbname, type, datatype, querydata = None,
             cherrypy.log("conditions " + str(conditions))
 
             coll = db["kiva.loans"]
-            # For now assume that we need to return only certain parameters
+            # Assumption: that only certain fields are required
             result = coll.find(conditions, { "_id": 0, "loans:id": 1,
                 "loans:location:geo:pairs": 1,
                 "loans:loan_amount": 1,
@@ -128,8 +128,6 @@ def run(servername, dbname, type, datatype, querydata = None,
             if by == "month":
                 response = [[d["_id"], float(d["loan_count"])] for d in result["result"] if d["_id"] != None]
             else:
-                # print 'result ', result
-                # response = result
                 response = [["%s" % d["_id"], float(d["amount"])] for d in result["result"] if d["_id"] != None]
         elif datatype == "population":
             coll = db["census"]
