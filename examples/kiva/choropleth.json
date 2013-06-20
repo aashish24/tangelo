@@ -17,7 +17,8 @@
       "transform": [
         {
           "type": "force",
-          "links": "edges"
+          "links": "edges",
+          "iterations": 0
         }
       ]
     },
@@ -25,7 +26,8 @@
       "name": "loans",
       "transform": [
         {
-          "type": "force"
+          "type": "force",
+          "iterations": 0
         }
       ]
     },
@@ -33,7 +35,8 @@
       "name": "lenders",
       "transform": [
         {
-          "type": "force"
+          "type": "force",
+          "iterations": 0
         }
       ]
     },
