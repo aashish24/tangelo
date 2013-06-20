@@ -95,8 +95,15 @@ def run(servername, dbname, type, datatype, querydata = None,
                 "_id": 0, "lenders:lender_id":1 }).limit(count)
             lenders = ["%s" % d["lenders:lender_id"] for d in lenders if d["lenders:lender_id"] != None]
 
+            # Use time if available
+            if (datemin is not None and datemax is not None):
+                conditions = { "loans:posted_date" : { "$gte" : datemin,
+                              "$lte" : datemax } }
+            else:
+                conditions = {}
+
             coll = db["kiva.lender.loan.links"]
-            result = coll.find({ "id" : { "$in" : list(lenders) } }, {
+            result = coll.find({ "$and": [{ "id" : { "$in" : list(lenders) } }, conditions ] }, {
                 "_id": 0, "id": 1,
                 "loans:id":1,
                 "loans:borrower_count":1})
