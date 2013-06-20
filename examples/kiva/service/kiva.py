@@ -105,11 +105,13 @@ def run(servername, dbname, type, datatype, querydata = None,
             coll = db["kiva.lender.loan.links"]
             result = coll.find({ "$and": [{ "id" : { "$in" : list(lenders) } }, conditions ] }, {
                 "_id": 0, "id": 1,
-                "loans:id":1,
-                "loans:borrower_count":1})
+                "loans:id": 1,
+                "loans:borrower_count": 1,
+                "loans:loan_amount": 1})
 
-            response = [["%s" % d["id"], "%s" % d["loans:id"], float(d["loans:borrower_count"])]
-                for d in result if d["id"] != None]
+            response = [["%s" % d["id"], "%s" % d["loans:id"],
+                float(d["loans:borrower_count"]),
+                float(d["loans:loan_amount"])] for d in result if d["id"] != None]
 
     # Perform aggregation type queries
     elif type == "aggregate":

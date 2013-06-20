@@ -145,7 +145,6 @@ $(function () {
         d3.json("service/kiva/" + host + "/xdata/find/loans?count="+count+"&datemin="+timeRange[0]+"&datemax="+timeRange[1], function (error, loans) {
             d3.json("service/kiva/" + host + "/xdata/find/lenders?count="+count+"&datemin="+timeRange[0]+"&datemax="+timeRange[1], function (error, lenders) {
                 d3.json("service/kiva/" + host + "/xdata/find/lender-loan-links", function (error, llLinks) {
-                    // TODO (Choudhary) Make this code modular
                     var i, d, categories = {},
                         noOfCategories, legends = [],
                         legendWidth = 40, legendHeight = 20,
@@ -221,6 +220,7 @@ $(function () {
                             llLinks[i][1] in loansIndexMap) {
                             link.source = lendersIndexMap[llLinks[i][0]];
                             link.target = loansIndexMap[llLinks[i][1]];
+                            link.borrowerCount = Math.sqrt(llLinks[i][2]);
                             kiva.data.edges.push(link);
                         }
                     }

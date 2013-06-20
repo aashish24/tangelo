@@ -189,7 +189,7 @@
           "path": {"field": "path"},
           "stroke": {"value": "green"},
           "strokeOpacity": {"value": 0.2},
-          "strokeWidth": {"value": 2}
+          "strokeWidth": {"field": "data.borrowerCount"}
         }
       }
     },
