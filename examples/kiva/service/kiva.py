@@ -57,8 +57,7 @@ def run(servername, dbname, type, datatype, querydata = None,
             result = coll.find(conditions, { "_id": 0, "loans:id": 1,
                 "loans:location:geo:pairs": 1,
                 "loans:loan_amount": 1,
-                "loans:sector": 1,
-                "loans:id": 1 }).limit(count)
+                "loans:sector": 1 }).limit(count)
 
             # Sort result by loan amount
             result.sort("loans:loan_amount", -1)

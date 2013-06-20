@@ -94,8 +94,7 @@
           "stroke": {"value": "#fff"},
           "path": {"field": "path"}
         },
-        "update": {"fill": {"value": "#ccc"}},
-        "hover": {"fill": {"value": "pink"}}
+        "update": {"fill": {"value": "#ccc"}}
       }
     },
     {
@@ -214,10 +213,10 @@
           "x": {"field": "x", "offset": 6},
           "y": {"field": "y"},
           "text": {"field": "data.label"},
-          "baseline": {"value": "middle"}
+          "baseline": {"value": "middle"},
+           "fillOpacity": {"value": 0.0}
         },
         "update": {
-          "fillOpacity": {"value": 0.6},
           "fill": {"value": "black"}
         },
         "hover": {
