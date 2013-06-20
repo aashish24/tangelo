@@ -72,8 +72,16 @@ def run(servername, dbname, type, datatype, querydata = None,
         # Perform find operation on lenders
         if datatype == "lenders":
             cherrypy.log("Processing find query for datatype " + datatype)
+             # Use time if available
+            if (datemin is not None and datemax is not None):
+                conditions = { "lenders:member_since" : { "$gte" : datemin,
+                              "$lte" : datemax } }
+            else:
+                conditions = {}
+
             coll = db["kiva.lenders"]
-            result = coll.find({ "loans:location:geo:pairs": { "$exists": "true" } }, {
+            result = coll.find(
+                { "$and" : [{"loans:location:geo:pairs": { "$exists": "true" } }, conditions]}, {
                 "_id": 0, "lenders:loan_count": 1,
                 "lenders:lender_id":1,
                 "loans:location:geo:pairs":1}).limit(count)
