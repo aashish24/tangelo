@@ -12,6 +12,8 @@ $(function () {
     kiva.timeslider = null;
     kiva.data = {};
     kiva.format = d3.time.format("%Y-%m-%d %H:%M:%S");
+    kiva.loanAmountDisplayThreshold = 25000;
+    kiva.loanCountDisplayThreshold = 2000;
 
     tangelo.requireCompatibleVersion("0.2");
 
@@ -167,6 +169,11 @@ $(function () {
                         kiva.data.lendersCountRange = [lenders[lenders.length - 1][2], lenders[0][2]];
                     }
                     for (i = 0; i < lenders.length; ++i) {
+                        if (lenders[i][2] > kiva.loanCountDisplayThreshold) {
+                            lenders[i].label = (lenders[i][2]).toString();
+                        } else {
+                            lenders[i].label = "";
+                        }
                         lenders[i].type = "Lenders";
                         categories[lenders[i].type] = 1;
                         kiva.data.nodes.push(lenders[i]);
@@ -182,6 +189,11 @@ $(function () {
                         kiva.data.loansAmountRange = [loans[loans.length - 1][2], loans[0][2]];
                     }
                     for (i = 0; i < loans.length; ++i) {
+                        if (loans[i][2] < kiva.loanAmountDisplayThreshold) {
+                            loans[i].label = "";
+                        } else {
+                            loans[i].label = (loans[i][2]).toString();
+                        }
                         loans[i].type = loans[i][3];
                         kiva.data.nodes.push(loans[i]);
                         // console.log('loans[i].type in categories', categories, loans[i].type in categories);

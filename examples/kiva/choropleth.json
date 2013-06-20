@@ -210,7 +210,7 @@
         "enter": {
           "x": {"field": "x", "offset": 6},
           "y": {"field": "y"},
-          "text": {"field": "data.2"},
+          "text": {"field": "data.label"},
           "baseline": {"value": "middle"}
         },
         "update": {
