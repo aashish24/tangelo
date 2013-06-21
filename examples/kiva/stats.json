@@ -1,0 +1,109 @@
+{
+    "width": 500,
+    "height": 200,
+    "padding": {
+        "top": 30,
+        "left": 30,
+        "bottom": 30,
+        "right": 0
+    },
+    "data": [
+        {
+            "name": "topLoans"
+        }
+    ],
+    "scales": [
+        {
+            "name": "y",
+            "type": "ordinal",
+            "range": "height",
+            "domain": {
+                "data": "topLoans",
+                "field": "data.label"
+            }
+        },
+        {
+            "name": "x",
+            "range": [
+                50,
+                450
+            ],
+            "nice": true,
+            "zero": true,
+            "domain": {
+                "data": "topLoans",
+                "field": "data.value"
+            }
+        }
+    ],
+    "axes": [
+        {
+            "type": "x",
+            "scale": "x",
+            "ticks": 6
+        }
+    ],
+    "marks": [
+        {
+            "type": "text",
+            "from": {
+                "data": "topLoans"
+            },
+            "properties": {
+                "enter": {
+                    "x": {
+                        "value": 0
+                    },
+                    "y": {
+                        "scale": "y",
+                        "field": "index"
+                    },
+                    "baseline": {
+                        "value": "middle"
+                    },
+                    "fill": {
+                        "value": "#000"
+                    },
+                    "text": {
+                        "field": "data.label"
+                    },
+                    "font": {
+                        "value": "Helvetica Neue"
+                    },
+                    "fontSize": {
+                        "value": 12
+                    }
+                }
+            }
+        },
+        {
+            "type": "rect",
+            "from": {
+                "data": "topLoans"
+            },
+            "properties": {
+                "enter": {
+                    "x": {
+                        "scale": "x",
+                        "value": 0
+                    },
+                    "x2": {
+                        "scale": "x",
+                        "field": "data.value"
+                    },
+                    "y": {
+                        "scale": "y",
+                        "field": "index",
+                        "offset": -1
+                    },
+                    "height": {
+                        "value": 20
+                    },
+                    "fill": {
+                        "value": "#888"
+                    }
+                }
+            }
+        }
+    ]
+}

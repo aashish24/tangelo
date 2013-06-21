@@ -8,9 +8,11 @@ $(function () {
     // Appplication object
     var kiva = {};
     kiva.view = null;
+    kiva.statsView = null;
     kiva.host = null;
     kiva.timeslider = null;
     kiva.data = {};
+    kiva.statsData = {};
     kiva.format = d3.time.format("%Y-%m-%d %H:%M:%S");
     kiva.loanAmountDisplayThreshold = 25000;
     kiva.loanCountDisplayThreshold = 2000;
@@ -43,7 +45,7 @@ $(function () {
             max = max;
 
             if(min === "") {
-                min = "Jan 01, 1970 00:00:00";
+                min = "2005-04-15 01:00:00";
             }
 
             if(max === "") {
@@ -69,8 +71,6 @@ $(function () {
                 high = ui.values[1];
 
                 kiva.displayFunc(low, high);
-
-                // @TODO Update it for kiva
                 update(adaptTime([low, high]),
                        d3.select("#count").node().value, "localhost");
             });
@@ -94,16 +94,26 @@ $(function () {
     /**
      * Update data for the visualization
      */
-    function updateData(data) {
+    function updateData() {
         "use strict";
 
         // Update visualization
-        console.log('Updated data ', data);
+        console.log('Updated data ', kiva.data);
+        console.log('Updated data ', kiva.statsData);
+
         if (kiva.view) {
-            kiva.view.data(data).update();
+            kiva.view.data(kiva.data).update();
         } else {
             vg.parse.spec("choropleth.json", function (chart) {
-                kiva.view = chart({el: "#vis", data: data}).update();
+                kiva.view = chart({el: "#vis", data: kiva.data}).update();
+            });
+        }
+
+        // TODO(Choudhary) For some reason, if we don't recreate the view
+        // the texts on the y axis does not get updated
+        {
+            vg.parse.spec("stats.json", function (chart) {
+                kiva.statsView = chart({el: "#stats", data: kiva.statsData}).update();
             });
         }
     }
@@ -162,6 +172,7 @@ $(function () {
                     kiva.data.edges = [];
                     kiva.data.loans = loans;
                     kiva.data.lenders = lenders;
+                    kiva.statsData.topLoans = [];
 
                     var i = 0;
                     if (lenders.length > 0) {
@@ -189,11 +200,24 @@ $(function () {
                         kiva.data.loansAmountRange = [loans[loans.length - 1][2], loans[0][2]];
                     }
                     for (i = 0; i < loans.length; ++i) {
+
                         if (loans[i][2] < kiva.loanAmountDisplayThreshold) {
                             loans[i].label = "";
                         } else {
                             loans[i].label = (loans[i][2]).toString();
                         }
+
+                        if (kiva.statsData.topLoans.length < 5) {
+                            var prevIndex = kiva.statsData.topLoans.length - 1;
+                            if (prevIndex === -1 ||
+                                (kiva.statsData.topLoans[prevIndex].value !== loans[i][2])) {
+                                var topLoan = {};
+                                topLoan.label = (loans[i][2]).toString();
+                                topLoan.value = loans[i][2];
+                                kiva.statsData.topLoans.push(topLoan);
+                            }
+                        }
+
                         loans[i].type = loans[i][3];
                         kiva.data.nodes.push(loans[i]);
                         // console.log('loans[i].type in categories', categories, loans[i].type in categories);
@@ -224,7 +248,7 @@ $(function () {
                     kiva.data.legends = legends;
 
                     // Finally construct links
-                    // TODO (Choudhary) This is really crude but we will make it better
+                    // TODO (Choudhary) This is crude but we will make it better
                     // later. It may be possible to do this on the server itself
                     for (i = 0; i < llLinks.length; ++i) {
                         var link = {};
@@ -244,7 +268,7 @@ $(function () {
                         .classed("disabled", true)
                         .text("Got " + N + " result" + (N === 0 || N > 1 ? "s" : ""));
 
-                    updateData(kiva.data, host);
+                    updateData();
                 });
             });
         });
