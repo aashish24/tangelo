@@ -64,7 +64,7 @@
     {
       "name": "loansAmountScale",
       "type": "linear",
-      "range": [100, 500],
+      "range": [400, 500],
       "zero": false,
       "domain": {"data": "loansAmountRange", "field": "data"}
     },

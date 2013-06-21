@@ -101,9 +101,9 @@ $(function () {
         console.log('Updated data ', kiva.data);
         console.log('Updated data ', kiva.statsData);
 
-        if (kiva.view) {
-            kiva.view.data(kiva.data).update();
-        } else {
+        // TODO(Choudhary) For some reason, if we don't recreate the view
+        // then the nodes don't get drawn using update method
+        {
             vg.parse.spec("choropleth.json", function (chart) {
                 kiva.view = chart({el: "#vis", data: kiva.data}).update();
             });
