@@ -64,7 +64,7 @@
     {
       "name": "loansAmountScale",
       "type": "linear",
-      "range": [400, 500],
+      "range": [100, 500],
       "zero": false,
       "domain": {"data": "loansAmountRange", "field": "data"}
     },
@@ -190,7 +190,7 @@
         "update": {
           "path": {"field": "path"},
           "stroke": {"value": "green"},
-          "strokeOpacity": {"value": 0.2},
+          "strokeOpacity": {"value": 0.04},
           "strokeWidth": {"field": "data.borrowerCount"}
         }
       }
