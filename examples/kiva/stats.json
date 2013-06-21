@@ -25,7 +25,7 @@
         {
             "name": "x",
             "range": [
-                50,
+                100,
                 450
             ],
             "nice": true,
@@ -101,6 +101,9 @@
                     },
                     "fill": {
                         "value": "#888"
+                    },
+                    "fillOpacity": {
+                      "value": 0.4
                     }
                 }
             }

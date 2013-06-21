@@ -212,7 +212,7 @@ $(function () {
                             if (prevIndex === -1 ||
                                 (kiva.statsData.topLoans[prevIndex].value !== loans[i][2])) {
                                 var topLoan = {};
-                                topLoan.label = (loans[i][2]).toString();
+                                topLoan.label = (prevIndex + 1).toString() + "-" + loans[i][3];
                                 topLoan.value = loans[i][2];
                                 kiva.statsData.topLoans.push(topLoan);
                             }
