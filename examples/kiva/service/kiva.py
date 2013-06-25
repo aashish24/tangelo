@@ -6,18 +6,14 @@ import cherrypy
 
 import tangelo
 
-
 def run(servername, dbname, type, datatype, querydata = None,
-    collection = None, by = None, datemin = None, datemax = None, count = None):
+    collection = None, by = None, datemin = None, datemax = None, count = 100):
 
     # Check if we have valid count value if not default to 100
-    if count is None:
-        count = 100
-    else:
-        try:
-            count = int(count)
-        except exceptions.ValueError:
-            pass
+    try:
+        count = int(count)
+    except exceptions.ValueError:
+        print "Unable to parse count value setting default to 100"
 
     # Construct an empty response object.
     response = tangelo.empty_response();
@@ -32,10 +28,10 @@ def run(servername, dbname, type, datatype, querydata = None,
     # Extract the requested database and collection.
     db = conn[dbname]
 
-    # (Chaudhary) Clean up this code. Currently the goal
+    # TODO (Chaudhary) Clean up this code. Currently the goal
     # is to get the data in the right format for the visualization.
     if type == "find":
-        # Current we support three types of datatypes: loans,
+        # Current we support three types of datatypes / collections: loans,
         # lenders, and lender-loan-links
 
         # Perform find operation on loans
@@ -45,16 +41,16 @@ def run(servername, dbname, type, datatype, querydata = None,
             # Check if we have valid datemin and max. Currently only
             # the loas has time entries
             if (datemin is not None and datemax is not None):
-                conditions = { "loans:posted_date" : { "$gte" : datemin,
+                timeConstraint = { "loans:posted_date" : { "$gte" : datemin,
                               "$lte" : datemax } }
             else:
-                conditions = {}
+                timeConstraint = {}
 
-            cherrypy.log("conditions " + str(conditions))
+            # cherrypy.log("timeConstraint " + str(timeConstraint))
 
             coll = db["kiva.loans"]
             # Assumption: that only certain fields are required
-            result = coll.find(conditions, { "_id": 0, "loans:id": 1,
+            result = coll.find(timeConstraint, { "_id": 0, "loans:id": 1,
                 "loans:location:geo:pairs": 1,
                 "loans:loan_amount": 1,
                 "loans:sector": 1 }).limit(count)
@@ -73,14 +69,14 @@ def run(servername, dbname, type, datatype, querydata = None,
             cherrypy.log("Processing find query for datatype " + datatype)
              # Use time if available
             if (datemin is not None and datemax is not None):
-                conditions = { "lenders:member_since" : { "$gte" : datemin,
+                timeConstraint = { "lenders:member_since" : { "$gte" : datemin,
                               "$lte" : datemax } }
             else:
-                conditions = {}
+                timeConstraint = {}
 
             coll = db["kiva.lenders"]
             result = coll.find(
-                { "$and" : [{"loans:location:geo:pairs": { "$exists": "true" } }, conditions]}, {
+                { "$and" : [{"loans:location:geo:pairs": { "$exists": "true" } }, timeConstraint]}, {
                 "_id": 0, "lenders:loan_count": 1,
                 "lenders:lender_id":1,
                 "loans:location:geo:pairs":1}).limit(count)
@@ -94,8 +90,8 @@ def run(servername, dbname, type, datatype, querydata = None,
 
         # Pefrom find operation on lender loan links data
         if datatype == "lender-loan-links":
-            # TODO For now find the lenders here but this information could come from
-            # the front-end as well
+            # TODO For now find the lenders and then using the result of the query
+            # find relevant lender-loan links
             cherrypy.log("Processing find query for datatype " + datatype)
             coll = db["kiva.lenders"]
             lenders = coll.find({ "loans:location:geo:pairs": { "$exists": "true" } }, {
@@ -104,13 +100,13 @@ def run(servername, dbname, type, datatype, querydata = None,
 
             # Use time if available
             if (datemin is not None and datemax is not None):
-                conditions = { "loans:posted_date" : { "$gte" : datemin,
+                timeConstraint = { "loans:posted_date" : { "$gte" : datemin,
                               "$lte" : datemax } }
             else:
-                conditions = {}
+                timeConstraint = {}
 
             coll = db["kiva.lender.loan.links"]
-            result = coll.find({ "$and": [{ "id" : { "$in" : list(lenders) } }, conditions ] }, {
+            result = coll.find({"$and": [{ "id" : {"$in" : list(lenders)}}, timeConstraint]}, {
                 "_id": 0, "id": 1,
                 "loans:id": 1,
                 "loans:borrower_count": 1,
@@ -121,6 +117,7 @@ def run(servername, dbname, type, datatype, querydata = None,
                 float(d["loans:loan_amount"])] for d in result if d["id"] != None]
 
     # Perform aggregation type queries
+    # NOTE The code below is not tested / used.
     elif type == "aggregate":
         if datatype == "lenders":
             coll = db["kiva.lenders"]

@@ -139,6 +139,9 @@ $(function () {
      */
     function update(timeRange, count, host) {
         "use strict";
+        var loansUrl = "",
+            lendersUrl = "",
+            lenderLoanLinksUrl = "";
 
         d3.select("#abort")
             .classed("btn-success", false)
@@ -154,9 +157,15 @@ $(function () {
         }
 
         // Load relevant dataset
-        d3.json("service/kiva/" + host + "/xdata/find/loans?count="+count+"&datemin="+timeRange[0]+"&datemax="+timeRange[1], function (error, loans) {
-            d3.json("service/kiva/" + host + "/xdata/find/lenders?count="+count+"&datemin="+timeRange[0]+"&datemax="+timeRange[1], function (error, lenders) {
-                d3.json("service/kiva/" + host + "/xdata/find/lender-loan-links", function (error, llLinks) {
+        loansUrl = "service/kiva/" + host + "/xdata/find/loans?count=" + count +
+            "&datemin=" + timeRange[0] + "&datemax=" + timeRange[1];
+        lendersUrl = "service/kiva/" + host + "/xdata/find/lenders?count=" + count +
+            "&datemin=" + timeRange[0] + "&datemax=" + timeRange[1];
+        lenderLoanLinksUrl = "service/kiva/" + host + "/xdata/find/lender-loan-links";
+
+        d3.json(loansUrl, function (error, loans) {
+            d3.json(lendersUrl, function (error, lenders) {
+                d3.json(lenderLoanLinksUrl, function (error, llLinks) {
                     var i, d, categories = {},
                         noOfCategories, legends = [],
                         legendWidth = 40, legendHeight = 20,
@@ -220,7 +229,6 @@ $(function () {
 
                         loans[i].type = loans[i][3];
                         kiva.data.nodes.push(loans[i]);
-                        // console.log('loans[i].type in categories', categories, loans[i].type in categories);
                         if (loans[i].type in categories === false) {
                             categories[loans[i].type] = 1;
                         }
@@ -248,8 +256,8 @@ $(function () {
                     kiva.data.legends = legends;
 
                     // Finally construct links
-                    // TODO (Choudhary) This is crude but we will make it better
-                    // later. It may be possible to do this on the server itself
+                    // TODO (Choudhary) This is not optimized but will do it later.
+                    // It may be possible to do this on the server itself
                     for (i = 0; i < llLinks.length; ++i) {
                         var link = {};
                         if (llLinks[i][0] in lendersIndexMap &&
@@ -315,8 +323,6 @@ $(function () {
     });
 
     d3.select("#count").on("change", function () {
-        console.log("Updating count");
-        console.log($( "#time-slider" ).slider( "values" ) );
         update(adaptTime($( "#time-slider" ).slider( "values" )),
             d3.select("#count").node().value, "localhost");
     });
