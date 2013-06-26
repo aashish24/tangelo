@@ -76,16 +76,16 @@ def run(servername, dbname, type, datatype, querydata = None,
 
             coll = db["kiva.lenders"]
             result = coll.find(
-                { "$and" : [{"loans:location:geo:pairs": { "$exists": "true" } }, timeConstraint]}, {
+                { "$and" : [{"lenders:location:geo:pairs": { "$exists": "true" } }, timeConstraint]}, {
                 "_id": 0, "lenders:loan_count": 1,
                 "lenders:lender_id":1,
-                "loans:location:geo:pairs":1}).limit(count)
+                "lenders:location:geo:pairs":1}).limit(count)
 
             # Sort result by loan count
             result.sort("lenders:loan_count", -1)
 
             response = [["%s" % d["lenders:lender_id"],
-                [float(x) for x in d["loans:location:geo:pairs"].split()],
+                [float(x) for x in d["lenders:location:geo:pairs"].split()],
                 float(d["lenders:loan_count"])] for d in result if d["lenders:lender_id"] != None]
 
         # Pefrom find operation on lender loan links data
@@ -94,7 +94,7 @@ def run(servername, dbname, type, datatype, querydata = None,
             # find relevant lender-loan links
             cherrypy.log("Processing find query for datatype " + datatype)
             coll = db["kiva.lenders"]
-            lenders = coll.find({ "loans:location:geo:pairs": { "$exists": "true" } }, {
+            lenders = coll.find({ "lenders:location:geo:pairs": { "$exists": "true" } }, {
                 "_id": 0, "lenders:lender_id":1 }).limit(count)
             lenders = ["%s" % d["lenders:lender_id"] for d in lenders if d["lenders:lender_id"] != None]
 
