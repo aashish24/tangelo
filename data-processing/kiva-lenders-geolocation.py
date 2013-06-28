@@ -9,11 +9,6 @@ from bson.objectid import ObjectId
 def repl_func(m):
     return m.group(1) + m.group(2).upper()
 
-# Default to localhost
-# state_codes = [AL", AK", AZ", AR", CA", CO", CT", DE", FL", GA", HI", ID", IL", IN", IA", KS", KY
-#   LA", ME", MD", MA", MI", MN", MS", MO", MT", NE", NV", NH", NJ", NM", NY", NC", ND", OH", OK", OR", PA",
-#   RI", SC", SD", TN", TX", UT", VT", VA", WA", WV", WI", WY]
-
 geonames = pymongo.Connection("localhost")["xdata"]["geonames"]
 lenders = pymongo.Connection("localhost")["xdata"]["kiva.lenders"]
 cache = {}
@@ -46,17 +41,7 @@ for entry in lenders.find({ }, { "_id": 1, "lenders:country_code": 1, "lenders:w
             #print 'type of id', type(latlon_pair)
             latlon_pair = str(result[0]["latitude"]) + " " + str(result[0]["longitude"])
 
-    lenders.update({ "_id": ObjectId(oid) },{ "$set": { "loans:location:geo:pairs":latlon_pair } })
+    lenders.update({ "_id": ObjectId(oid) },{ "$set": { "lenders:location:geo:pairs":latlon_pair } })
     print latlon_pair
     cache[key] = latlon_pair
 
-
-# sys.stderr.write("== %d blanks" % blank)
-# sys.stderr.write("== %d name_country" % name_country)
-# sys.stderr.write("== %d place_country_state" % place_country_state)
-# sys.stderr.write("== %d place_country" % place_country)
-# sys.stderr.write("== %d alternate_name_country" % alternate_name_country)
-# sys.stderr.write("== %d alternate_place_country_state" %
-#         alternate_place_country_state)
-# sys.stderr.write("== %d alternate_place_country" % alternate_place_country)
-# sys.stderr.write("== %d not_found" % not_found)
