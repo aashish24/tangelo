@@ -47,6 +47,6 @@ for entry in lenders.find({ }, { "_id": 1, "lenders:country_code": 1, "lenders:w
             latlon_pair = str(result[0]["latitude"]) + " " + str(result[0]["longitude"])
 
     lenders.update({ "_id": ObjectId(oid) },{ "$set": { "lenders:location:geo:pairs":latlon_pair } })
-    print "Found latitude longitude for place %s country %s value %s" % (place, country, latlon_pair)
+    print "Found [%s] for %s %s" % (latlon_pair, place, country)
     cache[key] = latlon_pair
 

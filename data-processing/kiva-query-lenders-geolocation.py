@@ -2,6 +2,7 @@ import json
 import sys
 import pymongo
 import re
+from bson.objectid import ObjectId
 
 def repl_func(m):
     return m.group(1) + m.group(2).upper()
@@ -19,15 +20,14 @@ alternate_place_country = 0
 not_found = 0
 
 for lender in lenders.find({ }, { "_id": 1, "lenders:country_code": 1, "lenders:whereabouts": 1 }):
-    where = lender["whereabouts"]
+    where = lender["lenders:whereabouts"]
     if where:
         where = where.strip()
-    country = lender["country_code"]
+    country = lender["lenders:country_code"]
     if country:
         country = country.strip()
     if where == None or where == "" or country == None or country == "":
         blank = blank + 1
-        continue
     where_parts = where.split(" ")
     if where_parts >= 2 and " ".join(where_parts[-2:]) == "British Columbia":
         state = "British Columbia"
@@ -43,6 +43,7 @@ for lender in lenders.find({ }, { "_id": 1, "lenders:country_code": 1, "lenders:
     found = False
     lat = 0
     lng = 0
+    print 'searching ', where, place, country
     if not found:
         for d in geonames.find({"name": where, "country_code": country,
                 "feature_class": "P"},
@@ -51,7 +52,6 @@ for lender in lenders.find({ }, { "_id": 1, "lenders:country_code": 1, "lenders:
             lng = d["longitude"]
             name_country = name_country + 1
             found = True
-            break
     if not found and place != "":
         for d in geonames.find({"name": place, "country_code": country,
                 "feature_class": "P",
@@ -61,7 +61,6 @@ for lender in lenders.find({ }, { "_id": 1, "lenders:country_code": 1, "lenders:
             lng = d["longitude"]
             place_country_state = place_country_state + 1
             found = True
-            break
     if not found and place != "":
         for d in geonames.find({"name": place, "country_code": country,
                 "feature_class": "P"},
@@ -70,7 +69,6 @@ for lender in lenders.find({ }, { "_id": 1, "lenders:country_code": 1, "lenders:
             lng = d["longitude"]
             place_country = place_country + 1
             found = True
-            break
     if not found:
         for d in geonames.find({"alternate": where, "country_code": country,
                 "feature_class": "P"},
@@ -79,7 +77,6 @@ for lender in lenders.find({ }, { "_id": 1, "lenders:country_code": 1, "lenders:
             lng = d["longitude"]
             found = True
             alternate_name_country = alternate_name_country + 1
-            break
     if not found and place != "":
         for d in geonames.find({"alternate": place, "country_code": country,
                 "feature_class": "P",
@@ -89,7 +86,6 @@ for lender in lenders.find({ }, { "_id": 1, "lenders:country_code": 1, "lenders:
             lng = d["longitude"]
             alternate_place_country_state = alternate_place_country_state + 1
             found = True
-            break
     if not found and place != "":
         for d in geonames.find({"alternate": place, "country_code": country,
                 "feature_class": "P"},
@@ -98,17 +94,14 @@ for lender in lenders.find({ }, { "_id": 1, "lenders:country_code": 1, "lenders:
             lng = d["longitude"]
             alternate_place_country = alternate_place_country + 1
             found = True
-            break
     if not found:
         not_found = not_found + 1
         sys.stderr.write("not found: \"%s\" \"%s\"\n" % (where, country))
-        continue
 
-
-    oid = lender["_id"]
     if found:
         latlon_pair = str(lat) + " " + str(lng)
     else:
         latlon_pair = ""
-    print 'found ', latlon_pair
+    print 'Found ', latlon_pair
+    oid = lender["_id"]
     lenders.update({ "_id": ObjectId(oid) },{ "$set": { "lenders:location:geo:pairs":latlon_pair } })
